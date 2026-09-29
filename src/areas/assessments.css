@@ -1,0 +1,25 @@
+/* CourseLink Dark — area: assessments
+ * Owned by one teammate. Gate every rule on html.cld-on. Use --cld-* palette vars from dark.css.
+ * Only add selectors verified against the real CourseLink DOM. */
+
+/* Grades grid: dark.css §8 paints every .dco/.dco_c wrapper with --cld-bg-1 (meant for quiz
+   questions), which drew darker boxes inside each My Grades cell. Verified on
+   /d2l/lms/grades/my_grades/main.d2l: table.d2l-table.d2l-grid.d_gl > td.d_gn / th.d_gt > div.dco. */
+html.cld-on table.d2l-grid.d_gl :is(.dco, .dco_c) {
+  background-color: transparent !important;
+  border-color: transparent !important;
+}
+
+/* Grade Item row headers (th.d_gt.d_ich.d2l-table-cell-first) are natively white; the §8 .dco
+   paint used to hide that. Give the cells themselves the surface colour + readable text. */
+html.cld-on table.d2l-grid.d_gl > tbody > tr > th.d_ich {
+  background-color: var(--cld-bg-1) !important;
+  color: var(--cld-text) !important;
+  border-color: var(--cld-border) !important;
+}
+html.cld-on table.d2l-grid.d_gl > tbody > tr > th.d_ich :is(label, span, strong, div) {
+  color: var(--cld-text) !important;
+}
+html.cld-on table.d2l-grid.d_gl > tbody > tr:hover > :is(th, td) {
+  background-color: var(--cld-hover) !important;
+}

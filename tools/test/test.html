@@ -1,0 +1,69 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><title>t</title>
+<style>
+  body { background:#fff; color:#494c4e; }
+  .hard-white { background-color:#ffffff; color:#222; border:1px solid #ddd; padding:4px }
+  .d2l-widget { background:#fff; }
+  .yellow { background:#ffeb3b; color:#000 }
+</style></head>
+<body>
+<div class="d2l-widget" id="widget">Widget</div>
+<div class="hard-white" id="hw">hard white <span id="inner">inner</span></div>
+<div class="yellow" id="yl">yellow badge</div>
+<div style="background-color: #fff" id="inl">inline</div>
+<table class="d2l-table"><thead><tr><th id="th">H</th></tr></thead><tbody><tr><td>c</td></tr></tbody></table>
+<input id="inp" value="x"><select id="sel"><option>a</option></select>
+<img id="img" src="data:image/gif;base64,R0lGODlhAQABAAAAACw=" width="1" height="1">
+<x-early id="early"></x-early>
+<pre id="result">pending</pre>
+<script>
+const own = new CSSStyleSheet(); own.replaceSync('.box{background:#fff;color:#111;padding:2px} .var{background:var(--d2l-color-regolith);color:var(--d2l-color-ferrite)}');
+class XLit extends HTMLElement {
+  connectedCallback(){ if(this.shadowRoot) return; const r=this.attachShadow({mode:'open'}); r.adoptedStyleSheets=[own]; r.innerHTML='<div class="box">box</div><div class="var">var</div><input class="i"><x-nested></x-nested>'; }
+}
+class XNested extends HTMLElement {
+  connectedCallback(){ if(this.shadowRoot) return; const r=this.attachShadow({mode:'open'}); r.adoptedStyleSheets=[own]; r.innerHTML='<div class="box">nested</div>'; }
+}
+customElements.define('x-nested', XNested);
+customElements.define('x-lit', XLit);
+document.body.insertBefore(document.createElement('x-lit'), document.body.firstChild);
+// Element parsed before definition, upgraded later
+setTimeout(()=>customElements.define('x-early', class extends XLit{}), 200);
+// Detached host created then appended later
+setTimeout(()=>{ const d=document.createElement('x-lit'); d.id='late'; document.body.appendChild(d); }, 400);
+
+setTimeout(()=>{
+  const cs=(el)=>getComputedStyle(el);
+  const q=(id)=>document.getElementById(id);
+  const lit=document.querySelector('x-lit');
+  const box=lit.shadowRoot.querySelector('.box');
+  const nested=lit.shadowRoot.querySelector('x-nested').shadowRoot.querySelector('.box');
+  const earlyBox=q('early').shadowRoot && q('early').shadowRoot.querySelector('.box');
+  const lateBox=q('late').shadowRoot.querySelector('.box');
+  const out={
+    htmlClass: document.documentElement.className,
+    htmlBg: cs(document.documentElement).backgroundColor,
+    bodyBg: cs(document.body).backgroundColor, bodyColor: cs(document.body).color,
+    widgetBg: cs(q('widget')).backgroundColor,
+    hwBg: cs(q('hw')).backgroundColor, hwColor: cs(q('hw')).color, hwBorder: cs(q('hw')).borderTopColor, hwAttrs:[...q('hw').attributes].map(a=>a.name).join(','),
+    yellowBg: cs(q('yl')).backgroundColor, yellowColor: cs(q('yl')).color,
+    inlineBg: cs(q('inl')).backgroundColor,
+    thBg: cs(q('th')).backgroundColor,
+    inputBg: cs(q('inp')).backgroundColor, inputColor: cs(q('inp')).color,
+    selectBg: cs(q('sel')).backgroundColor,
+    imgFilter: cs(q('img')).filter, imgAttrs:[...q('img').attributes].map(a=>a.name).join(','),
+    shadowSheets: lit.shadowRoot.adoptedStyleSheets.length,
+    shadowBoxBg: cs(box).backgroundColor, shadowBoxColor: cs(box).color,
+    shadowVarBg: cs(lit.shadowRoot.querySelector('.var')).backgroundColor, shadowVarColor: cs(lit.shadowRoot.querySelector('.var')).color,
+    shadowInputBg: cs(lit.shadowRoot.querySelector('.i')).backgroundColor,
+    nestedBg: cs(nested).backgroundColor,
+    earlyUpgradedBg: earlyBox ? cs(earlyBox).backgroundColor : 'no-root', earlySheets: q('early').shadowRoot ? q('early').shadowRoot.adoptedStyleSheets.length : 0,
+    lateBg: cs(lateBox).backgroundColor,
+  };
+  document.documentElement.classList.remove('cld-on');
+  out.offBodyBg = cs(document.body).backgroundColor; out.offWidgetBg = cs(q('widget')).backgroundColor;
+  document.documentElement.classList.add('cld-on');
+  q('result').textContent = 'RESULT ' + JSON.stringify(out, null, 1);
+}, 2500);
+</script>
+</body></html>

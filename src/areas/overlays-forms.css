@@ -1,0 +1,18 @@
+/* CourseLink Dark — area: overlays-forms
+ * Owned by one teammate. Gate every rule on html.cld-on. Use --cld-* palette vars from dark.css.
+ * Only add selectors verified against the real CourseLink DOM. */
+
+/* Minibar flyouts (message/alert lists): D2L paints a light fade gradient
+   (rgb(249,251,255) -> transparent) on the datalist container (class d2l-datalist-style1, rule
+   `... + #AB_DL_PH_Messages .d2l-datalist-container` in D2L.LP.Web.Desktop.css). */
+html.cld-on body [id^="AB_DL_PH_"] div.d2l-datalist-container,
+html.cld-on body div.d2l-datalist-container.d2l-datalist-slim,
+html.cld-on body div.d2l-datalist-container[class*="d2l-datalist-style"] {
+  background-image: none !important;
+  background-color: var(--cld-bg-1) !important;
+  color: var(--cld-text) !important;
+}
+html.cld-on .d2l-datalist-container .d2l-datalist-empty {
+  background-color: transparent !important;
+  color: var(--cld-text-muted) !important;
+}

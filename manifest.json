@@ -1,0 +1,61 @@
+{
+  "manifest_version": 3,
+  "name": "CourseLink Dark",
+  "version": "1.0.0",
+  "description": "A native-feeling dark theme for University of Guelph CourseLink (D2L Brightspace). No inversion filters.",
+  "minimum_chrome_version": "111",
+  "permissions": [
+    "storage"
+  ],
+  "icons": {
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
+  "action": {
+    "default_title": "CourseLink Dark",
+    "default_popup": "popup/popup.html",
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "48": "icons/icon48.png",
+      "128": "icons/icon128.png"
+    }
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "https://courselink.uoguelph.ca/*"
+      ],
+      "run_at": "document_start",
+      "all_frames": true,
+      "match_about_blank": true,
+      "world": "MAIN",
+      "js": [
+        "src/shadow-hook.js"
+      ]
+    },
+    {
+      "matches": [
+        "https://courselink.uoguelph.ca/*"
+      ],
+      "run_at": "document_start",
+      "all_frames": true,
+      "match_about_blank": true,
+      "css": [
+        "src/dark.css",
+        "src/areas/content.css",
+        "src/areas/assessments.css",
+        "src/areas/discussions-calendar.css",
+        "src/areas/overlays-forms.css"
+      ],
+      "js": [
+        "src/shadow-css.js",
+        "src/areas/content-shadow.js",
+        "src/areas/assessments-shadow.js",
+        "src/areas/discussions-calendar-shadow.js",
+        "src/areas/overlays-forms-shadow.js",
+        "src/content.js"
+      ]
+    }
+  ]
+}

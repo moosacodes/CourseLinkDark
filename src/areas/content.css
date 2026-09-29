@@ -1,0 +1,291 @@
+/* CourseLink Dark — area: content
+ * Owned by one teammate. Gate every rule on html.cld-on. Use --cld-* palette vars from dark.css.
+ * Only add selectors verified against the real CourseLink DOM.
+ *
+ * Scope: Content tool (/d2l/le/content/{ou}/Home — TOC side panel + module/topic
+ * lists), topic viewer (/d2l/le/content/{ou}/viewContent/{id}/View), HTML/file
+ * topic chrome, and in-course homepage widget chrome.
+ *
+ * Selector provenance (no live DevTools session was available to this area):
+ *   [src]  BrightspaceUI component source, s.brightspace.com/lib/bsi/2026.9.217
+ *          (the exact build CourseLink currently loads).
+ *   [ref]  Classic LE markup as targeted by long-running D2L dark themes
+ *          (Learn-Darklight for UWaterloo LEARN; 2024 brightspace.com userstyle).
+ *   Everything is additive and palette-only; rules that don't match are inert.
+ */
+
+/* ==========================================================================
+   C1. Two-panel layout (Content Home): side panel (TOC) + main panel   [ref]
+   The side panel's light background lives on .d2l-twopanelselector-side-sep
+   / -side-bg, not on the wrapper.
+   ========================================================================== */
+html.cld-on .d2l-twopanelselector-wrapper,
+html.cld-on .d2l-twopanelselector-main {
+  background-color: transparent !important;
+}
+html.cld-on :is(.d2l-twopanelselector-side, .d2l-twopanelselector-side-bg).d2l-twopanelselector-side-sep,
+html.cld-on .d2l-twopanelselector-wrapper.d2l-repsonsive-collapse-layout .d2l-twopanelselector-side {
+  background-color: var(--cld-bg-1) !important;
+  border-color: var(--cld-border) !important;
+}
+html.cld-on .d2l-twopanelselector-side {
+  scrollbar-color: #4a515a var(--cld-bg-1);
+}
+
+/* ==========================================================================
+   C2. Table of Contents tree (#ContentModuleTree / #D2L_LE_Content_TreeBrowser)
+   Selection highlight is drawn by a ::before layer on the anchor.      [ref]
+   dark.css §5 paints the *whole* selected <li> (incl. nested children) with
+   --cld-hover; neutralise that here (id specificity wins) and highlight only
+   the anchor row, like native D2L does.
+   ========================================================================== */
+html.cld-on #D2L_LE_Content_TreeBrowser .d2l-le-TreeAccordionItem,
+html.cld-on #ContentModuleTree .d2l-le-TreeAccordionItem,
+html.cld-on #ContentModuleTree .d2l-le-TreeAccordionItem-Selected {
+  background-color: transparent !important;
+  border-color: var(--cld-border) !important;
+}
+html.cld-on #ContentModuleTree a.d2l-le-TreeAccordionItem-anchor,
+html.cld-on #ContentModuleTree a.d2l-le-TreeAccordionItem-anchor:link,
+html.cld-on #ContentModuleTree a.d2l-le-TreeAccordionItem-anchor:visited {
+  color: var(--cld-text) !important;
+  text-decoration: none;
+}
+html.cld-on #ContentModuleTree a.d2l-le-TreeAccordionItem-anchor :is(.d2l-textblock-secondary, .d2l-body-small) {
+  color: var(--cld-text-muted) !important;
+}
+html.cld-on #ContentModuleTree a.d2l-le-TreeAccordionItem-anchor .d2l-tree-browser-icon {
+  color: var(--cld-text-muted) !important;
+}
+/* Hover / keyboard focus: link-blue label + subtle row tint. */
+html.cld-on #ContentModuleTree a.d2l-le-TreeAccordionItem-anchor:is(:hover, :focus) .d2l-inline .d2l-textblock:first-child,
+html.cld-on #ContentModuleTree a.d2l-le-TreeAccordionItem-anchor:is(:hover, :focus) .d2l-tree-browser-icon {
+  color: var(--cld-link-hover) !important;
+}
+html.cld-on #ContentModuleTree .d2l-le-TreeAccordionItem:not(.d2l-le-TreeAccordionItem-Selected) > a.d2l-le-TreeAccordionItem-anchor:hover::before {
+  background: var(--cld-hover) !important;
+}
+/* Selected row. */
+html.cld-on #ContentModuleTree .d2l-le-TreeAccordionItem.d2l-le-TreeAccordionItem-Selected > a.d2l-le-TreeAccordionItem-anchor::before,
+html.cld-on #ContentModuleTree .d2l-le-TreeAccordionItem.d2l-le-TreeAccordionItem-Selected > a.d2l-le-TreeAccordionItem-anchor:is(:link, :visited, :hover, :focus)::before {
+  background: var(--cld-selected) !important;
+  border-color: var(--cld-accent) !important;
+}
+html.cld-on #ContentModuleTree .d2l-le-TreeAccordionItem.d2l-le-TreeAccordionItem-Selected > a.d2l-le-TreeAccordionItem-anchor {
+  color: #ffffff !important;
+}
+/* Unread / "new" count pills beside module names (celestine outline). [ref] */
+html.cld-on .d2l-le-TreeAccordionItem-wrapper > div > div > div:nth-last-child(2) > div {
+  background: none !important;
+  border-color: var(--cld-link) !important;
+}
+html.cld-on .d2l-le-TreeAccordionItem-wrapper > div > div > div:nth-last-child(2) > div > div {
+  color: var(--cld-link) !important;
+}
+
+/* ==========================================================================
+   C3. Module / topic lists in the main panel (classic d2l-datalist)    [ref]
+   ========================================================================== */
+html.cld-on :is(#ContentView, .d2l-twopanelselector-main) :is(
+  .d2l-datalist-container, .d2l-datalist, .d2l-datalist-item,
+  .d2l-datalist-item-content, .d2l-datalist-nesteditem-nestedcontainer > div
+) {
+  background-color: transparent !important;
+  border-color: var(--cld-border) !important;
+}
+html.cld-on :is(#ContentView, .d2l-twopanelselector-main) .d2l-datalist-item:hover > .d2l-datalist-item-content {
+  background-color: var(--cld-hover) !important;
+}
+/* Nested (Table of Contents) accordions. */
+html.cld-on .d2l-datalist-nesteditem-accordion,
+html.cld-on .d2l-datalist-nesteditem-accordion > .d2l-datalist-item-content.d2l-datalist-item-content-first {
+  background-color: transparent !important;
+  border-color: var(--cld-border) !important;
+  color: var(--cld-text);
+}
+html.cld-on .d2l-datalist-nesteditem-accordion.d2l-datalist-nesteditem-accordion-open,
+html.cld-on .d2l-datalist-nesteditem-accordion.d2l-datalist-nesteditem-accordion-open > .d2l-datalist-item-content.d2l-datalist-item-content-first {
+  background-color: var(--cld-bg-1) !important;
+}
+html.cld-on .d2l-le-DataListItem-Selected > .d2l-datalist-item-content {
+  background-color: var(--cld-selected) !important;
+  border-color: var(--cld-accent) !important;
+}
+html.cld-on .d2l-datalist-summary {
+  background-color: var(--cld-bg-2) !important;
+  border-color: var(--cld-border) !important;
+  color: var(--cld-text);
+}
+html.cld-on .d2l-datalist .d2l-textblock-strong { color: var(--cld-text) !important; }
+html.cld-on .d2l-datalist .d2l-textblock-secondary { color: var(--cld-text-muted) !important; }
+
+/* ==========================================================================
+   C4. Collapsible panes: module headers on TOC page, in-course homepage
+   widgets that use them (e.g. Upcoming Events / Content Browser).      [ref]
+   ========================================================================== */
+html.cld-on .d2l-collapsepane {
+  background-color: transparent !important;
+  border-color: var(--cld-border) !important;
+}
+html.cld-on .d2l-collapsepane .d2l-collapsepane-header {
+  background-color: var(--cld-bg-2) !important;
+  border-color: var(--cld-border) !important;
+  color: var(--cld-text) !important;
+}
+html.cld-on .d2l-collapsepane .d2l-collapsepane-header.d2l-collapsepane-collapsed {
+  background-color: var(--cld-bg-1) !important;
+}
+html.cld-on .d2l-collapsepane .d2l-collapsepane-header:hover {
+  background-color: var(--cld-hover) !important;
+}
+html.cld-on .d2l-collapsepane .d2l-collapsepane-content {
+  background-color: transparent !important;
+  border-color: var(--cld-border) !important;
+  color: var(--cld-text);
+}
+html.cld-on .d2l-widget .d2l-collapsepane .d2l-collapsepane-content .d2l-datalist-item:hover {
+  background-color: var(--cld-hover) !important;
+}
+
+/* ==========================================================================
+   C5. Topic viewer chrome (viewContent/{id}/View)                     [ref]
+   #ContentView hosts the topic; file topics render inside
+   #d2l_le_content_printcontainer > .d2l-fileviewer, which has a light frame.
+   The document/PDF/iframe itself is never touched.
+   ========================================================================== */
+html.cld-on #ContentView,
+html.cld-on #ContentView.d2l-placeholder > div,
+html.cld-on #d2l_le_content_printcontainer > .d2l-fileviewer > div {
+  background-color: var(--cld-bg-1) !important;
+  border-color: var(--cld-border) !important;
+  color: var(--cld-text);
+}
+html.cld-on #d2l_le_content_printcontainer,
+html.cld-on .d2l-fileviewer {
+  background-color: transparent !important;
+  border-color: var(--cld-border) !important;
+}
+html.cld-on .d2l-fileviewer-pdf-pdfjs {
+  border-color: var(--cld-border) !important;
+}
+html.cld-on :is(.d2l-fileviewer-text, .d2l-htmlblock) :is(table, th, td) {
+  border-color: var(--cld-border-strong);
+}
+
+/* Previous / next topic buttons. */
+html.cld-on .d2l-iterator-button,
+html.cld-on .d2l-iterator-button.d2l-iterator-button-disabled:is(:hover, :focus) {
+  background-color: var(--cld-bg-2) !important;
+  border-color: var(--cld-border-strong) !important;
+  color: var(--cld-text) !important;
+}
+html.cld-on .d2l-iterator-button:not(.d2l-iterator-button-disabled):is(:hover, :focus) {
+  background-color: var(--cld-accent) !important;
+  border-color: var(--cld-accent) !important;
+  color: var(--cld-on-accent) !important;
+}
+html.cld-on .d2l-iterator-button:not(.d2l-iterator-button-disabled):is(:hover, :focus) :is(.d2l-icon, d2l-icon) {
+  color: var(--cld-on-accent) !important;
+}
+html.cld-on .d2l-iterator-button.d2l-iterator-button-disabled {
+  opacity: 0.5;
+}
+
+/* Slide-out quick navigation pane on the topic viewer. The handle's arrow is
+   a CSS border triangle, so recolour its border-left/right.           [ref] */
+html.cld-on .d2l-page-collapsepane-handle,
+html.cld-on .d2l-page-collapsepane.d2l-page-collapsepane-opening .d2l-page-collapsepane-handle {
+  background-color: var(--cld-bg-2) !important;
+  border-color: var(--cld-border) !important;
+}
+html.cld-on .d2l-page-collapsepane-content,
+html.cld-on .d2l-page-collapsepane-content-inner {
+  background-color: var(--cld-bg-1) !important;
+  border-color: var(--cld-border) !important;
+  color: var(--cld-text);
+}
+html.cld-on .d2l-page-collapsepane-shadow {
+  box-shadow: 0 0 12px var(--cld-shadow) !important;
+}
+html.cld-on .d2l-page-collapsepane-handle-link {
+  border-left-color: var(--cld-text-muted) !important;
+}
+html.cld-on .d2l-page-collapsepane.d2l-page-collapsepane-opening .d2l-page-collapsepane-handle .d2l-page-collapsepane-handle-link {
+  border-right-color: var(--cld-text-muted) !important;
+}
+html.cld-on #ContentNavigator .vui-list > li {
+  border-color: var(--cld-border) !important;
+  background-color: transparent;
+}
+html.cld-on #ContentNavigator .vui-list > li:hover {
+  background-color: var(--cld-hover) !important;
+}
+html.cld-on #ContentNavigator .vui-list > :is(.vui-selected, .vui-active) {
+  background-color: var(--cld-selected) !important;
+}
+
+/* File links inside content (download chips). */
+html.cld-on .d2l-filelink-link > .d2l-filelink-link-text { color: var(--cld-link) !important; }
+html.cld-on .d2l-filelink-link:is(:hover, :focus) > .d2l-filelink-link-text { color: var(--cld-link-hover) !important; }
+html.cld-on .d2l-filelink-filesize { color: var(--cld-text-muted) !important; }
+
+/* ==========================================================================
+   C6. Authored HTML (module descriptions / HTML topics rendered in the light
+   DOM, and HTML-file topics that load in a same-origin iframe, which also
+   receive this sheet). Complements dark.css §2/§5.
+   ========================================================================== */
+html.cld-on .d2l-htmlblock :is(a, a:link, a:visited) { color: var(--cld-link); }
+html.cld-on .d2l-htmlblock a:hover { color: var(--cld-link-hover); }
+html.cld-on .d2l-htmlblock blockquote { border-color: var(--cld-border-strong); }
+
+/* Brightspace code snippets (prism, BSI 2026.9 [src]): remap the LIGHT
+   (.d2l-code) token set to D2L's own dark (.d2l-code-dark) values. */
+html.cld-on :is(pre, code)[class*="language-"].d2l-code {
+  --d2l-code-background: #202122 !important;
+  --d2l-code-language: #90989d !important;
+  --d2l-code-line-numbers: #9ea5a9 !important;
+  --d2l-code-line-numbers-background: #303133 !important;
+  --d2l-code-token-default: #cdd5dc !important;
+  --d2l-code-token-comment: #90989d !important;
+  --d2l-code-token-punctuation: #cdd5dc !important;
+  --d2l-code-token-number: #cdd5dc !important;
+  --d2l-code-token-url: #cdd5dc !important;
+  --d2l-code-token-operator: #cdd5dc !important;
+  --d2l-code-token-interpolation: #92d1ff !important;
+  --d2l-code-token-attribute-name: #92d1ff !important;
+  --d2l-code-token-constant: #00d2ed !important;
+  --d2l-code-token-property: #92d1ff !important;
+  --d2l-code-token-tag: #2899e9 !important;
+  --d2l-code-token-boolean: #2896e4 !important;
+  --d2l-code-token-entity: #29a6ff !important;
+  --d2l-code-token-interpolation-punctuation: #29a6ff !important;
+  --d2l-code-token-function: #fff9d6 !important;
+  --d2l-code-token-class-name: #2ccfb0 !important;
+  --d2l-code-token-symbol: #2de2c0 !important;
+  --d2l-code-token-builtin: #fd4e9d !important;
+  --d2l-code-token-keyword: #e94a92 !important;
+  --d2l-code-token-atrule: #fd4e9d !important;
+  --d2l-code-token-selector: #fff9d6 !important;
+  --d2l-code-token-important: #ff575a !important;
+  --d2l-code-token-regex: #29a6ff !important;
+  --d2l-code-token-string: #e9ba79 !important;
+  --d2l-code-token-char: #e9ba79 !important;
+  --d2l-code-token-attribute-value: #e9ba79 !important;
+  --d2l-code-token-combinator: #cdd5dc !important;
+}
+
+/* ==========================================================================
+   C7. In-course homepage chrome                                        [ref]
+   The banner image itself is left alone; only its container backdrop.
+   ========================================================================== */
+html.cld-on #CourseImageBannerPlaceholderId > .d2l-course-banner-container {
+  background-color: var(--cld-bg-1) !important;
+}
+
+/* C8 — module completion progress bar (verified live: div.d2l-progresschart > svg > path track (fill attr white) + a > rect fill) */
+html.cld-on svg.d2l-progresschart path,
+html.cld-on .d2l-chart svg path,
+html.cld-on .d2l-progresschart svg path {
+  fill: var(--cld-bg-2) !important;
+  stroke: var(--cld-border) !important;
+}

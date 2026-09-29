@@ -1,0 +1,36 @@
+/* CourseLink Dark — area: discussions-calendar
+ * Owned by one teammate. Gate every rule on html.cld-on. Use --cld-* palette vars from dark.css.
+ * Only add selectors verified against the real CourseLink DOM. */
+
+/* ---- Calendar: event chips (month/week/day) --------------------------------
+ * Verified: a.d2l-le-calendar-event (light DOM, /d2l/le/calendar/<ou>).
+ * D2L paints the chip with the calendar's own colour (e.g. cyan #69d2e7);
+ * keep that colour (it identifies the course) but use dark text on it,
+ * like D2L does in light mode, instead of the global light link colour. */
+html.cld-on a.d2l-le-calendar-event,
+html.cld-on a.d2l-le-calendar-event:visited,
+html.cld-on a.d2l-le-calendar-event *,
+html.cld-on a.d2l-le-calendar-event .d2l-le-calendar-event-time {
+  color: #0e1216 !important;
+}
+html.cld-on a.d2l-le-calendar-event:hover,
+html.cld-on a.d2l-le-calendar-event:focus-visible {
+  text-decoration: underline;
+  outline-color: var(--cld-focus);
+}
+
+/* ---- Calendar: view switcher (Agenda/Day/Week/Month/List) ------------------
+ * Verified: .d2l-button-filter > ul > li > a.vui-button.d2l-button-filter-selected
+ * (aria-pressed="true"). D2L paints it var(--d2l-color-tungsten), which our
+ * palette remaps to a light gray, leaving white text unreadable. */
+html.cld-on .d2l-button-filter > ul > li > a.d2l-button-filter-selected,
+html.cld-on .d2l-button-filter > ul > li > a.d2l-button-filter-selected:hover,
+html.cld-on .d2l-button-filter > ul > li > a.d2l-button-filter-selected:focus {
+  background-color: var(--cld-selected) !important;
+  color: var(--cld-text) !important;
+  border-color: var(--cld-accent) !important;
+  box-shadow: inset 0 -2px 0 var(--cld-accent) !important;
+}
+html.cld-on .d2l-button-filter > ul > li > a.vui-button:not(.d2l-button-filter-selected):hover {
+  background-color: var(--cld-hover) !important;
+}
